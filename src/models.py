@@ -1,7 +1,7 @@
 # Models for the API requests and responses
 import uuid
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 
 class MovieModel(BaseModel):
@@ -13,7 +13,7 @@ class MovieModel(BaseModel):
     release_date: Optional[int] = Field(None, le=datetime.now().year + 5)
 
 
-    @validator("release_date", allow_reuse=True)
+    @field_validator("release_date", mode="before")
     @classmethod
     def release_date_must_be_reasonable(cls, v):
         if v and (v < 1878 or v > datetime.now().year + 5):
